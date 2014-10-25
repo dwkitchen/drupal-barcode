@@ -1,0 +1,7 @@
+name: Barcode
+type: module
+description: 'Provides a barcode field type.'
+package: Field Types
+core: 8.x
+dependencies:
+- field
