@@ -15,7 +15,7 @@ use Drupal\Core\Field\FieldItemListInterface;
  *
  * @FieldFormatter(
  *   id = "barcode_default",
- *   label = @Translation("Default"),
+ *   label = @Translation("Plain Text"),
  *   field_types = {
  *     "barcode",
  *   },
@@ -30,11 +30,7 @@ class BarcodeDefaultFormatter extends FormatterBase {
     $elements = array();
 
     foreach ($items as $delta => $item) {
-      $elements[$delta] = array(
-        '#type' => 'text',
-        '#text' => $item->value,
-        '#langcode' => $item->getLangcode(),
-      );
+      $elements[$delta] = array('#markup' => $item->value);
     }
 
     return $elements;

@@ -28,25 +28,26 @@ class BarcodeItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function defaultStorageSettings() {
-    return array(
-      'max_length' => 255,
-    ) + parent::defaultStorageSettings();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     return array(
       'columns' => array(
         'value' => array(
           'type' => 'varchar',
           'length' => 256,
-          'not null' => TRUE,
+          'not null' => FALSE,
         ),
       ),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
+    $properties['value'] = DataDefinition::create('string')
+      ->setLabel(t('Barcode'));
+
+    return $properties;
   }
 
   /**
@@ -60,8 +61,28 @@ class BarcodeItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
-    $properties['value'] = DataDefinition::create('string')
-      ->setLabel(t('Barcode'));
+  public function getConstraints() {
+    $constraint_manager = \Drupal::typedDataManager()->getValidationConstraintManager();
+    $constraints = parent::getConstraints();
+
+    $max_length = 256;
+    $constraints[] = $constraint_manager->create('ComplexData', array(
+      'value' => array(
+        'Length' => array(
+          'max' => $max_length,
+          'maxMessage' => t('%name: the barcode may not be longer than @max characters.', array('%name' => $this->getFieldDefinition()->getLabel(), '@max' => $max_length)),
+        )
+      ),
+    ));
+
+    return $constraints;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+    $values['value'] = rand(pow(10, 8), pow(10, 9)-1);
+    return $values;
   }
 }
