@@ -14,11 +14,8 @@ class BarcodeTypeBase extends PluginBase implements BarcodeTypeInterface {
     return $this->pluginDefinition['name'];
   }
 
-  public function getImage() {
-
+  public function generateImage($barcode, $settings) {
+    return array();
   }
 
-  private function generateImage() {}
-
-  public function checkDigit() {}
 }

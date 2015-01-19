@@ -1,0 +1,4 @@
+services:
+  plugin.manager.barcode.barcode_type:
+    class: Drupal\barcode\BarcodeTypeManager
+    parent: default_plugin_manager

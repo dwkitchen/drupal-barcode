@@ -1,0 +1,11 @@
+jquery.barcode_input:
+  remote: https://github.com/customink/barcode_input
+  version: v0.4.0
+  license:
+    name: MIT
+    url: https://github.com/customink/barcode_input/blob/v0.4.0/LICENSE-MIT
+    gpl-compatible: true
+  js:
+    assets/vendor/jquery.barcode_input/jquery.barcode_input.min.js: { weight: -19, minified: true }
+  dependencies:
+    - core/jquery

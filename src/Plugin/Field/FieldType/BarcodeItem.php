@@ -7,6 +7,7 @@
 
 namespace Drupal\barcode\Plugin\Field\FieldType;
 
+use Drupal\barcode\BarcodeItemInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -23,7 +24,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   default_formatter = "barcode_default"
  * )
  */
-class BarcodeItem extends FieldItemBase {
+class BarcodeItem extends FieldItemBase implements BarcodeItemInterface {
 
   /**
    * {@inheritdoc}
@@ -32,6 +33,11 @@ class BarcodeItem extends FieldItemBase {
     return array(
       'columns' => array(
         'value' => array(
+          'type' => 'varchar',
+          'length' => 256,
+          'not null' => FALSE,
+        ),
+        'encoding' => array(
           'type' => 'varchar',
           'length' => 256,
           'not null' => FALSE,
@@ -46,6 +52,8 @@ class BarcodeItem extends FieldItemBase {
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('string')
       ->setLabel(t('Barcode'));
+    $properties['encoding'] = DataDefinition::create('string')
+      ->setLabel(t('Encoding'));
 
     return $properties;
   }
@@ -84,5 +92,48 @@ class BarcodeItem extends FieldItemBase {
   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
     $values['value'] = rand(pow(10, 8), pow(10, 9)-1);
     return $values;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getImage($settings) {
+    $filename = $this->fileName($settings);
+
+    // If the file doesn't exist generate it.
+    if (!file_exists($filename)) {
+      $this->generateImage($settings);
+    }
+
+    // If the file still doesn't exist return false.
+    if (!file_exists($filename)) {
+      return FALSE;
+    }
+
+    // Return the filename
+    return $filename;
+  }
+
+  protected function generateImage($settings) {
+    $filename = $this->fileName($settings);
+    $value = $this->get('value')->getValue();
+    $encoding = $this->getValue('encoding')->getValue();
+
+    $manager = \Drupal::service('plugin.manager.barcode.barcode_type');
+    $barcodeType = $manager->get($encoding);
+
+    $image = $barcodeType->generateImage($value, $settings);
+
+    file_save_data($image, $filename);
+
+  }
+
+  protected function fileName($settings) {
+    $value = $this->get('value')->getValue();
+    $encoding = $this->getValue('encoding')->getValue();
+
+    $name = md5($value);
+
+    return $name . $encoding . '.' . $settings['image_format'];
   }
 }

@@ -8,7 +8,7 @@
 namespace Drupal\barcode\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\Plugin\Field\FieldWidget\StringTextfieldWidget;
+use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -22,7 +22,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   },
  * )
  */
-class BarcodeDefaultWidget extends StringTextfieldWidget {
+class BarcodeDefaultWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
@@ -48,12 +48,39 @@ class BarcodeDefaultWidget extends StringTextfieldWidget {
   /**
    * {@inheritdoc}
    */
+  public function settingsSummary() {
+    $summary = array();
+
+    $placeholder = $this->getSetting('placeholder');
+    if (!empty($placeholder)) {
+      $summary[] = t('Placeholder: @placeholder', array('@placeholder' => $placeholder));
+    }
+    else {
+      $summary[] = t('No placeholder');
+    }
+
+    return $summary;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $element['value'] = $element + array(
-        '#type' => 'textfield',
-        '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,
-        '#placeholder' => $this->getSetting('placeholder'),
-      );
+    $element['value'] = array(
+      '#type' => 'textfield',
+      '#title' => $element['#title'],
+      '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,
+      '#placeholder' => $this->getSetting('placeholder'),
+    );
+    $manager = \Drupal::service('plugin.manager.barcode.barcode_type');
+    $encoding_options = $manager->listOptions();
+    $element['encoding'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Encoding'),
+      '#default_value' => isset($items[$delta]->encoding) ? $items[$delta]->encoding : NULL,
+      '#options' => $encoding_options,
+      '#title_display' => 'invisible'
+    );
     return $element;
   }
 }

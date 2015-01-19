@@ -11,14 +11,14 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines a barcode item annotation object.
  *
- * Plugin Namespace: Plugin\barcode\BarcodeType
+ * Plugin Namespace: Plugin\Barcode\BarcodeType
  *
- * @see \Drupal\barcode\Plugin\BarcodeTypeManager
+ * @see \Drupal\barcode\BarcodeTypeManager
  * @see plugin_api
  *
  * @Annotation
  */
-class Barcode extends Plugin {
+class BarcodeType extends Plugin {
 
   /**
    * The plugin ID.
@@ -28,7 +28,7 @@ class Barcode extends Plugin {
   public $id;
 
   /**
-   * The name of the barcode.
+   * The name of the barcode type.
    *
    * @var \Drupal\Core\Annotation\Translation
    *
