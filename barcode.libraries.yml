@@ -1,0 +1,11 @@
+JsBarcode:
+  remote: https://github.com/lindell/JsBarcode
+  version: 1.2
+  license:
+    name: MIT
+    url: https://github.com/lindell/JsBarcode/blob/master/MIT-LICENSE.txt
+    gpl-compatible: true
+  js:
+    assets/vendor/jquery.barcode_input/jquery.barcode_input.min.js: { weight: -19, minified: true }
+  dependencies:
+    - core/jquery

@@ -13,17 +13,17 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\barcode\BarcodeItemInterface;
 
 /**
- * Plugin implementation of the 'barcode_default' formatter.
+ * Plugin implementation of the 'barcode_image' formatter.
  *
  * @FieldFormatter(
- *   id = "barcode_js",
- *   label = @Translation("JS Image"),
+ *   id = "barcode_image",
+ *   label = @Translation("Image"),
  *   field_types = {
  *     "barcode",
  *   },
  * )
  */
-class BarcodeJSFormatter extends FormatterBase {
+class BarcodeImageFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
