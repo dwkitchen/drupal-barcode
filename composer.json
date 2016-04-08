@@ -1,0 +1,8 @@
+{
+  "name": "drupal/barcode",
+  "type": "drupal-module",
+  "description": "Barcode Field",
+  "homepage": "https://www.drupal.org/project/barcode",
+  "license": "GPL-2.0+",
+  "minimum-stability": "dev"
+}
